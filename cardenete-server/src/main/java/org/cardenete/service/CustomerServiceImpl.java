@@ -2,7 +2,7 @@ package org.cardenete.service;
 
 import java.util.List;
 
-import org.cardenete.dao.interfaces.CustomerDAO;
+import org.cardenete.dao.specific.CustomerDAO;
 import org.cardenete.entity.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

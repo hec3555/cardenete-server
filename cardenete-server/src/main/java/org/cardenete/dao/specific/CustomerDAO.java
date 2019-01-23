@@ -1,4 +1,4 @@
-package org.cardenete.dao.interfaces;
+package org.cardenete.dao.specific;
 
 import java.util.List;
 

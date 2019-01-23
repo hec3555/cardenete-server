@@ -2,7 +2,6 @@ package org.cardenete.dao.specific;
 
 import java.util.List;
 
-import org.cardenete.dao.interfaces.CustomerDAO;
 import org.cardenete.entity.Customer;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

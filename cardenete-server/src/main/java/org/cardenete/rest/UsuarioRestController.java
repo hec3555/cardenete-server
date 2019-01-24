@@ -25,4 +25,5 @@ public class UsuarioRestController {
 	public List<UsuarioBean> getAllUsuarios(){
 		return (List<UsuarioBean>) genericService.getAll(UsuarioBean.class);
 	}
+	
 }

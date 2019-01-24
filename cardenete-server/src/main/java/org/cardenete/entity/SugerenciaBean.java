@@ -18,7 +18,7 @@ import com.sun.istack.NotNull;
 @Entity
 @Table(name="articulo")
 @SecondaryTables({
-	@SecondaryTable(name = "usuario", pkJoinColumns = { @PrimaryKeyJoinColumn(name = "id_usuario") })
+	@SecondaryTable(name = "usuario", pkJoinColumns = { @PrimaryKeyJoinColumn(name = "id") })
 })
 public class SugerenciaBean {
 

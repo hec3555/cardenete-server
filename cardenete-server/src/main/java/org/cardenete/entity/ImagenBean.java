@@ -17,8 +17,8 @@ import com.sun.istack.NotNull;
 @Entity
 @Table(name="articulo")
 @SecondaryTables({
-	@SecondaryTable(name = "usuario", pkJoinColumns = { @PrimaryKeyJoinColumn(name = "id_usuario") }),
-	@SecondaryTable(name = "categoria", pkJoinColumns = { @PrimaryKeyJoinColumn(name = "id_categoria") }),
+	@SecondaryTable(name = "usuario", pkJoinColumns = { @PrimaryKeyJoinColumn(name = "id") }),
+	@SecondaryTable(name = "categoria", pkJoinColumns = { @PrimaryKeyJoinColumn(name = "id") }),
 })
 public class ImagenBean {
 

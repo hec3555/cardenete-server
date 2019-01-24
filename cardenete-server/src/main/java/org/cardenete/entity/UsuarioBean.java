@@ -14,6 +14,7 @@ import javax.persistence.SecondaryTable;
 import javax.persistence.SecondaryTables;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sun.istack.NotNull;
@@ -44,10 +45,15 @@ public class UsuarioBean {
 	
 	@Column(name="fecha_nacimiento")
 	@NotNull
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
 	private Date fecha_nacimiento;
 	
 	@Column(name="fecha_alta")
 	@NotNull
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+	// @JsonSerialize(using = JsonDateSerializer.class) 
+	// clase añadida en helper para formatear la fecha (viene en timestamp - tiempo unix)
+	// la añadia porque con jsonformat no me formatea la hora, pero esta clase tampoco va de momento
 	private Date fecha_alta;
 	
 	@Column(name="login")

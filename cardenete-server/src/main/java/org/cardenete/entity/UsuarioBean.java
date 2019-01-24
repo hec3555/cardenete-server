@@ -21,7 +21,7 @@ import com.sun.istack.NotNull;
 @Entity
 @Table(name="usuario")
 @SecondaryTables({
-	@SecondaryTable(name = "tipo_usuario", pkJoinColumns = { @PrimaryKeyJoinColumn(name = "id_tipo_usuario") })
+	@SecondaryTable(name = "tipo_usuario", pkJoinColumns = { @PrimaryKeyJoinColumn(name = "id") })
 })
 public class UsuarioBean {
 

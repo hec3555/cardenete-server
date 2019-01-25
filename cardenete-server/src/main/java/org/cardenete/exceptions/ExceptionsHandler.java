@@ -1,6 +1,6 @@
 package org.cardenete.exceptions;
 
-import org.cardenete.entity.ErrorResponseBean;
+import org.cardenete.entity.ResponseBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -12,11 +12,11 @@ public class ExceptionsHandler {
 	// Add an exception handler for CustomerNotFoundException
 	
 	@ExceptionHandler
-	public ResponseEntity<ErrorResponseBean> handleException(BeanNotFoundException exc) {
+	public ResponseEntity<ResponseBean> handleException(BeanNotFoundException exc) {
 		
 		// create CustomerErrorResponse
 		
-		ErrorResponseBean error = new ErrorResponseBean(
+		ResponseBean error = new ResponseBean(
 											HttpStatus.NOT_FOUND.value(),
 											exc.getMessage(),
 											System.currentTimeMillis());
@@ -30,11 +30,11 @@ public class ExceptionsHandler {
 	// Add another exception handler ... to catch any exception (catch all)
 
 	@ExceptionHandler
-	public ResponseEntity<ErrorResponseBean> handleException(Exception exc) {
+	public ResponseEntity<ResponseBean> handleException(Exception exc) {
 		
 		// create CustomerErrorResponse
 		
-		ErrorResponseBean error = new ErrorResponseBean(
+		ResponseBean error = new ResponseBean(
 											HttpStatus.BAD_REQUEST.value(),
 											exc.getMessage(),
 											System.currentTimeMillis());

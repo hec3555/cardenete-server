@@ -2,6 +2,7 @@ package org.cardenete.rest;
 
 import java.util.List;
 
+import org.cardenete.entity.ResponseBean;
 import org.cardenete.entity.UsuarioBean;
 import org.cardenete.exceptions.BeanNotFoundException;
 import org.cardenete.service.generic.GenericServiceInterface;
@@ -32,23 +33,31 @@ public class UsuarioRestController {
 	}
 
 	@PostMapping("/usuarios")
-	public int addUsuario(@RequestBody UsuarioBean oUsuario) {
-		return genericService.save(oUsuario);
+	public ResponseBean addUsuario(@RequestBody UsuarioBean oUsuario) {
+		return new ResponseBean(200,String.valueOf(genericService.save(oUsuario)));
 	}
 
 	@PutMapping("/usuarios")
-	public String updateBean(@RequestBody UsuarioBean oUsuario) {
+	public ResponseBean updateBean(@RequestBody UsuarioBean oUsuario) {
 
 		// throw exception if null
 		if (genericService.get(UsuarioBean.class, oUsuario.getId()) == null) {
 			throw new BeanNotFoundException("Usuario con el id: " + oUsuario.getId()+" no encontrado.");
 		}
+		
+		if(oUsuario.getPass()== null) {
+			UsuarioBean usuarioAux = genericService.get(UsuarioBean.class, oUsuario.getId());
+			oUsuario.setPass(usuarioAux.getPass());
+		}
+		
+		System.out.println(oUsuario);
+		
 
-		return genericService.saveOrUpdate(oUsuario);
+		return new ResponseBean(200,genericService.saveOrUpdate(oUsuario));
 	}
 
 	@DeleteMapping("/usuarios/{idUsuario}")
-	public String deleteCustomer(@PathVariable int idUsuario) {
+	public ResponseBean deleteCustomer(@PathVariable int idUsuario) {
 
 		UsuarioBean oUsuario = genericService.get(UsuarioBean.class, idUsuario);
 
@@ -59,7 +68,7 @@ public class UsuarioRestController {
 
 		genericService.delete(oUsuario);
 
-		return "Deleted user id - " + idUsuario;
+		return new ResponseBean(200,"Deleted user id - " + idUsuario);
 	}
 
 }

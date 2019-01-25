@@ -1,6 +1,7 @@
 package org.cardenete.entity;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,8 +21,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sun.istack.NotNull;
 
 @Entity()
-// @DynamicUpdate(true) Esto es para que hibernate solo actualice los campos que cambian (para actualizar usuario sin cambiar su contra),
-// no he hecho que funcione. En enlace explica como -> https://stackoverflow.com/questions/52162452/how-to-use-hibernate-dynamicupdate-with-spring-data-jpa
 @Table(name="usuario")
 @SecondaryTables({
 	@SecondaryTable(name = "tipo_usuario", pkJoinColumns = { @PrimaryKeyJoinColumn(name = "id") })
@@ -53,9 +52,6 @@ public class UsuarioBean {
 	@Column(name="fecha_alta")
 	@NotNull
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-	// @JsonSerialize(using = JsonDateSerializer.class) 
-	// clase añadida en helper para formatear la fecha (viene en timestamp - tiempo unix)
-	// la añadia porque con jsonformat no me formatea la hora, pero esta clase tampoco va de momento
 	private Date fecha_alta;
 	
 	@Column(name="login")
@@ -63,7 +59,6 @@ public class UsuarioBean {
 	private String login;
 	
 	@Column(name="pass")
-	@NotNull
 	private String pass;
 	
 	@Column(name="email")

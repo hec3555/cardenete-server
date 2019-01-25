@@ -1,16 +1,21 @@
 package org.cardenete.entity;
 
-public class ErrorResponseBean {
+public class ResponseBean {
 
 	private int status;
 	private String message;
 	private long timeStamp;
 	
-	public ErrorResponseBean() {
+	public ResponseBean() {
 		
 	}
+	
+	public ResponseBean(int status, String message) {
+		this.status = status;
+		this.message = message;
+	}
 
-	public ErrorResponseBean(int status, String message, long timeStamp) {
+	public ResponseBean(int status, String message, long timeStamp) {
 		this.status = status;
 		this.message = message;
 		this.timeStamp = timeStamp;

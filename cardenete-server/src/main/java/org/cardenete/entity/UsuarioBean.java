@@ -19,7 +19,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sun.istack.NotNull;
 
-@Entity
+@Entity()
+// @DynamicUpdate(true) Esto es para que hibernate solo actualice los campos que cambian (para actualizar usuario sin cambiar su contra),
+// no he hecho que funcione. En enlace explica como -> https://stackoverflow.com/questions/52162452/how-to-use-hibernate-dynamicupdate-with-spring-data-jpa
 @Table(name="usuario")
 @SecondaryTables({
 	@SecondaryTable(name = "tipo_usuario", pkJoinColumns = { @PrimaryKeyJoinColumn(name = "id") })
@@ -63,6 +65,11 @@ public class UsuarioBean {
 	@Column(name="pass")
 	@NotNull
 	private String pass;
+	
+	@Column(name="email")
+	@NotNull
+	private String email;
+	
 	
 	@Column(name="token")
 	@NotNull
@@ -188,14 +195,26 @@ public class UsuarioBean {
 		this.id_tipo_usuario = id_tipo_usuario;
 	}
 
+	public String getEmail() {
+		return email;
+	}
+
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 
 	@Override
 	public String toString() {
 		return "UsuarioBean [id=" + id + ", nombre=" + nombre + ", ape1=" + ape1 + ", ape2=" + ape2
 				+ ", fecha_nacimiento=" + fecha_nacimiento + ", fecha_alta=" + fecha_alta + ", login=" + login
-				+ ", pass=" + pass + ", token=" + token + ", confirmado=" + confirmado + ", id_tipo_usuario="
-				+ id_tipo_usuario + "]";
+				+ ", pass=" + pass + ", email=" + email + ", token=" + token + ", confirmado=" + confirmado
+				+ ", id_tipo_usuario=" + id_tipo_usuario + "]";
 	}
+
+
+	
 	
 	
 	

@@ -19,7 +19,7 @@ public class TipoUsuarioBean {
 	@NotNull
 	private int id;
 	
-	@Column(name="desc")
+	@Column(name="descripcion")
 	@NotNull
 	private String desc;
 

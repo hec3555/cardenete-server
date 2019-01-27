@@ -1,5 +1,6 @@
 package org.cardenete.rest;
 
+import java.util.Date;
 import java.util.List;
 
 import org.cardenete.entity.ResponseBean;
@@ -24,6 +25,10 @@ public class UsuarioRestController {
 
 	@GetMapping("/usuarios/{idUsuario}")
 	public UsuarioBean getUsuario(@PathVariable int idUsuario) {
+
+		if (genericService.get(UsuarioBean.class, idUsuario) == null) {
+			throw new BeanNotFoundException("Usuario con el id: " + idUsuario + " no encontrado.");
+		}
 		return genericService.get(UsuarioBean.class, idUsuario);
 	}
 
@@ -34,7 +39,10 @@ public class UsuarioRestController {
 
 	@PostMapping("/usuarios")
 	public ResponseBean addUsuario(@RequestBody UsuarioBean oUsuario) {
-		return new ResponseBean(200,String.valueOf(genericService.save(oUsuario)));
+		Date fechaAlta = new Date();
+		oUsuario.setFecha_alta(fechaAlta);
+		System.out.println(oUsuario.getFecha_alta());
+		return new ResponseBean(200, String.valueOf(genericService.save(oUsuario)));
 	}
 
 	@PutMapping("/usuarios")
@@ -42,18 +50,17 @@ public class UsuarioRestController {
 
 		// throw exception if null
 		if (genericService.get(UsuarioBean.class, oUsuario.getId()) == null) {
-			throw new BeanNotFoundException("Usuario con el id: " + oUsuario.getId()+" no encontrado.");
+			throw new BeanNotFoundException("Usuario con el id: " + oUsuario.getId() + " no encontrado.");
 		}
-		
-		if(oUsuario.getPass()== null) {
+
+		if (oUsuario.getPass() == null) {
 			UsuarioBean usuarioAux = genericService.get(UsuarioBean.class, oUsuario.getId());
 			oUsuario.setPass(usuarioAux.getPass());
 		}
-		
-		System.out.println(oUsuario);
-		
 
-		return new ResponseBean(200,genericService.saveOrUpdate(oUsuario));
+		System.out.println(oUsuario);
+
+		return new ResponseBean(200, genericService.saveOrUpdate(oUsuario));
 	}
 
 	@DeleteMapping("/usuarios/{idUsuario}")
@@ -63,12 +70,12 @@ public class UsuarioRestController {
 
 		// throw exception if null
 		if (oUsuario == null) {
-			throw new BeanNotFoundException("Usuario con el id: " + idUsuario +" no encontrado.");
+			throw new BeanNotFoundException("Usuario con el id: " + idUsuario + " no encontrado.");
 		}
 
 		genericService.delete(oUsuario);
 
-		return new ResponseBean(200,"Deleted user id - " + idUsuario);
+		return new ResponseBean(200, "Deleted user id - " + idUsuario);
 	}
 
 }

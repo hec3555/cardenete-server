@@ -1,7 +1,6 @@
 package org.cardenete.entity;
 
-import java.sql.Date;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -50,8 +49,8 @@ public class UsuarioBean {
 	private Date fecha_nacimiento;
 	
 	@Column(name="fecha_alta")
-	@NotNull
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+	// @NotNull
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss", timezone = "Europe/Madrid")
 	private Date fecha_alta;
 	
 	@Column(name="login")

@@ -15,7 +15,7 @@ import javax.persistence.Table;
 import com.sun.istack.NotNull;
 
 @Entity
-@Table(name="articulo")
+@Table(name="imagen")
 @SecondaryTables({
 	@SecondaryTable(name = "usuario", pkJoinColumns = { @PrimaryKeyJoinColumn(name = "id") }),
 	@SecondaryTable(name = "categoria", pkJoinColumns = { @PrimaryKeyJoinColumn(name = "id") }),
@@ -32,7 +32,7 @@ public class ImagenBean {
 	@NotNull
 	private String nom_imagen;
 	
-	@Column(name="desc")
+	@Column(name="descripcion")
 	private String desc;
 	
 	@Column(name="foto")
@@ -46,5 +46,62 @@ public class ImagenBean {
 	@ManyToOne
 	@JoinColumn(name = "id_categoria")
 	private UsuarioBean id_categoria;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getNom_imagen() {
+		return nom_imagen;
+	}
+
+	public void setNom_imagen(String nom_imagen) {
+		this.nom_imagen = nom_imagen;
+	}
+
+	public String getDesc() {
+		return desc;
+	}
+
+	public void setDesc(String desc) {
+		this.desc = desc;
+	}
+
+	public String getFoto() {
+		return foto;
+	}
+
+	public void setFoto(String foto) {
+		this.foto = foto;
+	}
+
+	public SeccionBean getId_usuario() {
+		return id_usuario;
+	}
+
+	public void setId_usuario(SeccionBean id_usuario) {
+		this.id_usuario = id_usuario;
+	}
+
+	public UsuarioBean getId_categoria() {
+		return id_categoria;
+	}
+
+	public void setId_categoria(UsuarioBean id_categoria) {
+		this.id_categoria = id_categoria;
+	}
+
+	@Override
+	public String toString() {
+		return "ImagenBean [id=" + id + ", nom_imagen=" + nom_imagen + ", desc=" + desc + ", foto=" + foto
+				+ ", id_usuario=" + id_usuario + ", id_categoria=" + id_categoria + "]";
+	}
+	
+	
+	
 	
 }

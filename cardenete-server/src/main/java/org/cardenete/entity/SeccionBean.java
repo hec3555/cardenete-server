@@ -22,7 +22,7 @@ public class SeccionBean {
 	@Column(name="nom_seccion")
 	private String nom_seccion;
 	
-	@Column(name="desc")
+	@Column(name="descripcion")
 	private String desc;
 
 	public int getId() {

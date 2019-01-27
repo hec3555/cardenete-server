@@ -45,7 +45,7 @@ public class UsuarioBean {
 	
 	@Column(name="fecha_nacimiento")
 	@NotNull
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy", timezone = "Europe/Madrid")
 	private Date fecha_nacimiento;
 	
 	@Column(name="fecha_alta")

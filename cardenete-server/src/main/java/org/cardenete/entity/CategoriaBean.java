@@ -19,7 +19,7 @@ public class CategoriaBean {
 	@NotNull
 	private int id;
 	
-	@Column(name="desc")
+	@Column(name="descripcion")
 	@NotNull
 	private String desc;
 

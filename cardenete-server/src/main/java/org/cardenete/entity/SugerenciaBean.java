@@ -16,7 +16,7 @@ import com.sun.istack.NotNull;
 
 
 @Entity
-@Table(name="articulo")
+@Table(name="sugerencia")
 @SecondaryTables({
 	@SecondaryTable(name = "usuario", pkJoinColumns = { @PrimaryKeyJoinColumn(name = "id") })
 })

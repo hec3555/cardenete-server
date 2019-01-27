@@ -41,7 +41,7 @@ public class UsuarioRestController {
 	public ResponseBean addUsuario(@RequestBody UsuarioBean oUsuario) {
 		Date fechaAlta = new Date();
 		oUsuario.setFecha_alta(fechaAlta);
-		System.out.println(oUsuario.getFecha_alta());
+		
 		return new ResponseBean(200, String.valueOf(genericService.save(oUsuario)));
 	}
 
@@ -57,8 +57,6 @@ public class UsuarioRestController {
 			UsuarioBean usuarioAux = genericService.get(UsuarioBean.class, oUsuario.getId());
 			oUsuario.setPass(usuarioAux.getPass());
 		}
-
-		System.out.println(oUsuario);
 
 		return new ResponseBean(200, genericService.saveOrUpdate(oUsuario));
 	}

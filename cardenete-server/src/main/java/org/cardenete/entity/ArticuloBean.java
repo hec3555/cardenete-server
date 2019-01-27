@@ -1,6 +1,6 @@
 package org.cardenete.entity;
 
-import java.sql.Date;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +14,7 @@ import javax.persistence.SecondaryTable;
 import javax.persistence.SecondaryTables;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sun.istack.NotNull;
 
 @Entity
@@ -34,11 +35,12 @@ public class ArticuloBean {
 	@NotNull
 	private String titulo;
 	
-	@Column(name="desc")
+	@Column(name="descripcion")
 	private String desc;
 	
 	@Column(name="fecha")
-	@NotNull
+	// @NotNull
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss", timezone = "Europe/Madrid")
 	private Date fecha;
 	
 	@Column(name="articulo")

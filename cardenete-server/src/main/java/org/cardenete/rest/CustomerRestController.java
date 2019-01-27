@@ -86,7 +86,7 @@ public class CustomerRestController {
 				
 		customerService.deleteCustomer(customerId);
 		
-		return "Deleted customer id - " + customerId;
+		return "Tipo usuario con id - " + customerId+" borrada.";
 	}
 	
 }

@@ -3,6 +3,7 @@ package org.cardenete.validations;
 import javax.servlet.http.HttpServletRequest;
 
 import org.cardenete.entity.UsuarioBean;
+import org.cardenete.exceptions.NotLoggedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,9 @@ public class CheckPermission {
 
 	
 	public boolean checkRolePermissions(int idTipoUsuario) {
-		checkIsLogged();
+		if(!checkIsLogged()) {
+			throw new NotLoggedException("No estas logeado.");
+		}
 		
 		UsuarioBean usuarioSession =  (UsuarioBean) servletRequest.getSession().getAttribute("usuario");
 		
@@ -32,6 +35,10 @@ public class CheckPermission {
 	// comprueba si el usuario que recibe es el mismo que hay en sesion
 	// (para editar o ver, los usuarios solo pueden ver su propio perfil, por ejemplo)
 	public boolean checkSameUserSession(int idUsuario) {
+		if(!checkIsLogged()) {
+			throw new NotLoggedException("No estas logeado.");
+		}
+		
 		UsuarioBean usuarioSession =  (UsuarioBean) servletRequest.getSession().getAttribute("usuario");
 		if(usuarioSession.getId()!= idUsuario) {
 			return false;

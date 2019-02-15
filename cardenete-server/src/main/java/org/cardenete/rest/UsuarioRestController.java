@@ -3,10 +3,14 @@ package org.cardenete.rest;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.cardenete.entity.ResponseBean;
 import org.cardenete.entity.UsuarioBean;
+import org.cardenete.enums.RolesEnum;
 import org.cardenete.exceptions.BeanNotFoundException;
 import org.cardenete.service.generic.GenericServiceInterface;
+import org.cardenete.validations.CheckPermission;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,12 +24,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/cardenete")
 public class UsuarioRestController {
+	
 	@Autowired
 	private GenericServiceInterface genericService;
+	
+	
+	// Para cada ruta haremos un check de lo que sea necesario, permitiendo o denegando acceso
+	@Autowired
+	private CheckPermission check;
+	
+	@Autowired
+	HttpServletRequest servletRequest;
 
 	@GetMapping("/usuarios/{idUsuario}")
 	public UsuarioBean getUsuario(@PathVariable int idUsuario) {
-
+		
 		if (genericService.get(UsuarioBean.class, idUsuario) == null) {
 			throw new BeanNotFoundException("Usuario con el id: " + idUsuario + " no encontrado.");
 		}
@@ -34,6 +47,7 @@ public class UsuarioRestController {
 
 	@GetMapping("/usuarios")
 	public List<UsuarioBean> getAllUsuarios() {
+		
 		return (List<UsuarioBean>) genericService.getAll(UsuarioBean.class);
 	}
 
@@ -47,12 +61,13 @@ public class UsuarioRestController {
 
 	@PutMapping("/usuarios")
 	public ResponseBean updateBean(@RequestBody UsuarioBean oUsuario) {
-
+		
 		// throw exception if null
 		if (genericService.get(UsuarioBean.class, oUsuario.getId()) == null) {
 			throw new BeanNotFoundException("Usuario con el id: " + oUsuario.getId() + " no encontrado.");
 		}
-
+		
+		// si el pass viene nulo, le ponemos la que ya tenía antes
 		if (oUsuario.getPass() == null) {
 			UsuarioBean usuarioAux = genericService.get(UsuarioBean.class, oUsuario.getId());
 			oUsuario.setPass(usuarioAux.getPass());

@@ -75,7 +75,7 @@ public class AppConfig implements WebMvcConfigurer {
 
 		props.setProperty("hibernate.dialect", env.getProperty("hibernate.dialect"));
 		props.setProperty("hibernate.show_sql", env.getProperty("hibernate.show_sql"));
-		// props.setProperty("hibernate.check_nullability", env.getProperty("hibernate.check_nullability"));
+		props.setProperty("hibernate.check_nullability", env.getProperty("hibernate.check_nullability"));
 
 		return props;
 	}

@@ -22,6 +22,7 @@ public class LoginRestController {
 	@Autowired
 	private LoginService loginService;
 
+	
 	private ResponseBean responseBean;
 	
 	// Para cada ruta haremos un check de lo que sea necesario, permitiendo o denegando acceso

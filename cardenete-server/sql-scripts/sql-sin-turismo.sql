@@ -161,22 +161,6 @@ CREATE TABLE IF NOT EXISTS `bdcar`.`imagen` (
 ENGINE = InnoDB;
 
 
--- -----------------------------------------------------
--- Table `bdcar`.`licitacion`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `bdcar`.`licitacion` ;
-
-CREATE TABLE IF NOT EXISTS `bdcar`.`licitacion` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `denominacion` VARCHAR(255) NOT NULL,
-  `n_exp` VARCHAR(255) NOT NULL,
-  `fecha_publicacion` DATETIME NOT NULL,
-  `fecha_limite` DATETIME NULL,
-  `estado` VARCHAR(255) NULL,
-  `tipo` VARCHAR(255) NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB;
-
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

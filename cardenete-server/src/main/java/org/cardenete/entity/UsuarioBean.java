@@ -45,12 +45,12 @@ public class UsuarioBean {
 	
 	@Column(name="fecha_nacimiento")
 	@NotNull
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy", timezone = "Europe/Madrid")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "Europe/Madrid")
 	private Date fecha_nacimiento;
 	
 	@Column(name="fecha_alta")
 	// @NotNull
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss", timezone = "Europe/Madrid")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "Europe/Madrid")
 	private Date fecha_alta;
 	
 	@Column(name="login")
@@ -159,12 +159,12 @@ public class UsuarioBean {
 		this.pass = pass;
 	}
 
-
+	@JsonIgnore
 	public String getToken() {
 		return token;
 	}
 
-
+	@JsonProperty
 	public void setToken(String token) {
 		this.token = token;
 	}

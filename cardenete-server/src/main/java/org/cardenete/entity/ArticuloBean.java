@@ -40,7 +40,7 @@ public class ArticuloBean {
 	
 	@Column(name="fecha")
 	// @NotNull
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss", timezone = "Europe/Madrid")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "Europe/Madrid")
 	private Date fecha;
 	
 	@Column(name="articulo")

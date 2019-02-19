@@ -66,7 +66,7 @@ public class UsuarioBean {
 	
 	
 	@Column(name="token")
-	@NotNull
+	// @NotNull ---> se tiene que generar al registrar/crear usuario
 	private String token;
 	
 	@Column(name="confirmado")

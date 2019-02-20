@@ -47,7 +47,6 @@ public class UsuarioRestController {
 
 	@GetMapping("/usuarios")
 	public List<UsuarioBean> getAllUsuarios() {
-		
 		return (List<UsuarioBean>) genericService.getAll(UsuarioBean.class);
 	}
 

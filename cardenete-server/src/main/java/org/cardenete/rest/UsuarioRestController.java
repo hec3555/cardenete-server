@@ -67,7 +67,7 @@ public class UsuarioRestController {
 		}
 		
 		// si el pass viene nulo, le ponemos la que ya tenía antes
-		if (oUsuario.getPass() == null) {
+		if (oUsuario.getPass() == null ) {
 			UsuarioBean usuarioAux = genericService.get(UsuarioBean.class, oUsuario.getId());
 			oUsuario.setPass(usuarioAux.getPass());
 		}

@@ -1,5 +1,7 @@
 package org.cardenete.dao.specific;
 
+import java.util.List;
+
 import org.cardenete.entity.UsuarioBean;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -20,7 +22,11 @@ public class LoginDaoImpl implements LoginDao {
 				.createQuery("from UsuarioBean WHERE login = :login and pass = :pass", UsuarioBean.class);
 		theQuery.setParameter("login", user);
 		theQuery.setParameter("pass", pass);
-		UsuarioBean usuario = theQuery.getSingleResult();
+		List<UsuarioBean> usuarioExists = theQuery.getResultList(); // creo una lista porque si hago el single result y no encuentra ningun usuario salta excepcion
+		if(usuarioExists.isEmpty()) { // si la lista esta vacia devuelvo null y así en el rest trataremos el error de que no se ha loggeado con el mensaje que quiera
+			return null;
+		}
+		UsuarioBean usuario = theQuery.getSingleResult(); // si llega aquí, es que si que lo ha encontrado y devolvemos el usuario que va a loggearse
 		return usuario;
 	}
 

@@ -6,6 +6,7 @@ import javax.servlet.http.HttpSession;
 
 import org.cardenete.entity.ResponseBean;
 import org.cardenete.entity.UsuarioBean;
+import org.cardenete.exceptions.NotAuthException;
 import org.cardenete.exceptions.NotLoggedException;
 import org.cardenete.service.LoginService;
 import org.cardenete.validations.CheckPermission;
@@ -18,14 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/cardenete")
 public class LoginRestController {
-	
+
 	@Autowired
 	private LoginService loginService;
 
-	
 	private ResponseBean responseBean;
-	
-	// Para cada ruta haremos un check de lo que sea necesario, permitiendo o denegando acceso
+
+	// Para cada ruta haremos un check de lo que sea necesario, permitiendo o
+	// denegando acceso
 	@Autowired
 	private CheckPermission check;
 
@@ -33,17 +34,23 @@ public class LoginRestController {
 	public ResponseBean login(HttpServletResponse response, HttpServletRequest request, HttpSession session,
 			@PathVariable String user, @PathVariable String pass) {
 		session.invalidate();
-		UsuarioBean oUsuarioBean = loginService.login(user, pass);
-
-		if (oUsuarioBean != null) {
-			HttpSession newSesion = request.getSession();
-			newSesion.setAttribute("usuario", oUsuarioBean);
-			responseBean = new ResponseBean(200, "Login correcto");
-		} else {
-			responseBean = new ResponseBean(401, "Bad login");
+		try {
+			UsuarioBean oUsuarioBean = loginService.login(user, pass);
+			if (oUsuarioBean != null) {
+				HttpSession newSesion = request.getSession();
+				newSesion.setAttribute("usuario", oUsuarioBean);
+				return responseBean = new ResponseBean(200, "Login correcto");
+			} else {
+				response.setStatus(401);
+				return responseBean = new ResponseBean(401, "Usuario o contraseña incorrectos (no encontrado)");
+			}
+			
+		} catch (NotAuthException ex) {
+			return responseBean = new ResponseBean(401, "Error in login rest");
 		}
-		response.setStatus(responseBean.getStatus());
-		return responseBean;
+		
+		
+
 	}
 
 	@GetMapping("/logout")
@@ -57,7 +64,7 @@ public class LoginRestController {
 		if (check.checkIsLogged()) {
 			return (UsuarioBean) session.getSession().getAttribute("usuario");
 		}
-			throw new NotLoggedException("No estas logeado");
+		throw new NotLoggedException("No estas logeado");
 	}
 
 }

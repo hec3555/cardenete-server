@@ -39,13 +39,15 @@ public class LoginRestController {
 			if (oUsuarioBean != null) {
 				HttpSession newSesion = request.getSession();
 				newSesion.setAttribute("usuario", oUsuarioBean);
+				response.setStatus(200);
 				return responseBean = new ResponseBean(200, "Login correcto");
 			} else {
 				response.setStatus(401);
-				return responseBean = new ResponseBean(401, "Usuario o contraseña incorrectos (no encontrado)");
+				return responseBean = new ResponseBean(401, "Usuario o contraseña incorrectos (usuario no encontrado)");
 			}
 			
 		} catch (NotAuthException ex) {
+			response.setStatus(401);
 			return responseBean = new ResponseBean(401, "Error in login rest");
 		}
 		

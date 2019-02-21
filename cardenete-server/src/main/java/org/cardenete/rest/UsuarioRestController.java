@@ -66,8 +66,8 @@ public class UsuarioRestController {
 			throw new BeanNotFoundException("Usuario con el id: " + oUsuario.getId() + " no encontrado.");
 		}
 		
-		// si el pass viene nulo, le ponemos la que ya tenía antes
-		if (oUsuario.getPass() == null ) {
+		// si el pass viene nulo o vacio, le ponemos la que ya tenía antes
+		if (oUsuario.getPass() == null || oUsuario.getPass() == "") {
 			UsuarioBean usuarioAux = genericService.get(UsuarioBean.class, oUsuario.getId());
 			oUsuario.setPass(usuarioAux.getPass());
 		}

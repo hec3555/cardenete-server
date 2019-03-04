@@ -59,7 +59,7 @@ public class UsuarioRestController {
 	}
 
 	@PutMapping("/usuarios")
-	public ResponseBean updateBean(@RequestBody UsuarioBean oUsuario) {
+	public ResponseBean updateUsuario(@RequestBody UsuarioBean oUsuario) {
 		
 		// throw exception if null
 		if (genericService.get(UsuarioBean.class, oUsuario.getId()) == null) {
@@ -76,7 +76,7 @@ public class UsuarioRestController {
 	}
 
 	@DeleteMapping("/usuarios/{idUsuario}")
-	public ResponseBean deleteCustomer(@PathVariable int idUsuario) {
+	public ResponseBean deleteUsuario(@PathVariable int idUsuario) {
 
 		UsuarioBean oUsuario = genericService.get(UsuarioBean.class, idUsuario);
 

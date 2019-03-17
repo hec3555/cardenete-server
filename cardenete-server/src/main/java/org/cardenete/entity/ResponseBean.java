@@ -3,21 +3,21 @@ package org.cardenete.entity;
 public class ResponseBean {
 
 	private int status;
-	private String message;
+	private String msg;
 	private long timeStamp;
 	
 	public ResponseBean() {
 		
 	}
 	
-	public ResponseBean(int status, String message) {
+	public ResponseBean(int status, String msg) {
 		this.status = status;
-		this.message = message;
+		this.msg = msg;
 	}
 
-	public ResponseBean(int status, String message, long timeStamp) {
+	public ResponseBean(int status, String msg, long timeStamp) {
 		this.status = status;
-		this.message = message;
+		this.msg = msg;
 		this.timeStamp = timeStamp;
 	}
 
@@ -29,12 +29,12 @@ public class ResponseBean {
 		this.status = status;
 	}
 
-	public String getMessage() {
-		return message;
+	public String getMsg() {
+		return msg;
 	}
 
-	public void setMessage(String message) {
-		this.message = message;
+	public void setMsg(String msg) {
+		this.msg = msg;
 	}
 
 	public long getTimeStamp() {

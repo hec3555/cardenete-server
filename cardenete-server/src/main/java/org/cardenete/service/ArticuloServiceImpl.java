@@ -25,8 +25,8 @@ public class ArticuloServiceImpl implements ArticuloService {
 	}
 
 	@Transactional
-	public List<ArticuloBean> getAllByUsuarioAndSeccion(int idUsuario, int idSeccion) {
-		return articuloDao.getAllByUsuarioAndSeccion(idUsuario, idSeccion);
+	public List<ArticuloBean> getAllBySeccionAndUsuario(int idSeccion, int idUsuario) {
+		return articuloDao.getAllBySeccionAndUsuario(idSeccion, idUsuario);
 	}
 
 }

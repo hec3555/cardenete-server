@@ -63,18 +63,18 @@ public class ArticuloRestController {
 
 	}
 
-	@GetMapping("/articulos/usuario/{idUsuario}/seccion/{idSeccion}")
-	public List<ArticuloBean> getAllByUsuarioAndSeccion(@PathVariable int idUsuario, @PathVariable int idSeccion) {
-
-		if (genericService.get(UsuarioBean.class, idUsuario) == null) {
-			throw new BeanNotFoundException("Usuario con el id: " + idUsuario + " no encontrado.");
-		}
+	@GetMapping("/articulos/seccion/{idSeccion}/usuario/{idUsuario}")
+	public List<ArticuloBean> getAllByUsuarioAndSeccion(@PathVariable int idSeccion, @PathVariable int idUsuario) {
 
 		if (genericService.get(SeccionBean.class, idSeccion) == null) {
 			throw new BeanNotFoundException("Sección con el id: " + idSeccion + " no encontrada.");
 		}
+		
+		if (genericService.get(UsuarioBean.class, idUsuario) == null) {
+			throw new BeanNotFoundException("Usuario con el id: " + idUsuario + " no encontrado.");
+		}
 
-		return (List<ArticuloBean>) articuloService.getAllByUsuarioAndSeccion(idUsuario, idSeccion);
+		return (List<ArticuloBean>) articuloService.getAllBySeccionAndUsuario(idSeccion, idUsuario);
 	}
 
 	@PostMapping("/articulos")

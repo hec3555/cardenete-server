@@ -36,12 +36,12 @@ public class ArticuloDaoImpl implements ArticuloDao {
 		return articulos;
 	}
 
-	public List<ArticuloBean> getAllByUsuarioAndSeccion(int idUsuario, int idSeccion) {
+	public List<ArticuloBean> getAllBySeccionAndUsuario(int idSeccion, int idUsuario) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		Query<ArticuloBean> theQuery = currentSession
-				.createQuery("from ArticuloBean WHERE id_usuario.id = :idUsuario AND id_seccion.id = :idSeccion ", ArticuloBean.class);
-		theQuery.setParameter("idUsuario", idUsuario);
+				.createQuery("from ArticuloBean WHERE id_seccion.id = :idSeccion AND id_usuario.id = :idUsuario", ArticuloBean.class);
 		theQuery.setParameter("idSeccion", idSeccion);
+		theQuery.setParameter("idUsuario", idUsuario);
 		List<ArticuloBean> articulosByUsuarioAndSeccion= theQuery.getResultList();
 		if(articulosByUsuarioAndSeccion.isEmpty()) {
 			return null;

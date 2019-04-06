@@ -10,6 +10,6 @@ public interface ArticuloService {
 	
 	public List<ArticuloBean> getAllByUsuario(int idUsuario);
 	
-	public List<ArticuloBean> getAllByUsuarioAndSeccion(int idUsuario, int idSeccion);
+	public List<ArticuloBean> getAllBySeccionAndUsuario(int idSeccion, int idUsuario);
 	
 }

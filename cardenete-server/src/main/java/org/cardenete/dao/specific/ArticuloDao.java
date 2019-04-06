@@ -7,5 +7,5 @@ import org.cardenete.entity.ArticuloBean;
 public interface ArticuloDao {
 	public List<ArticuloBean> getAllBySeccion(int idSeccion);
 	public List<ArticuloBean> getAllByUsuario(int idUsuario);
-	public List<ArticuloBean> getAllByUsuarioAndSeccion(int idUsuario, int idSeccion);
+	public List<ArticuloBean> getAllBySeccionAndUsuario(int idSeccion, int idUsuario);
 }

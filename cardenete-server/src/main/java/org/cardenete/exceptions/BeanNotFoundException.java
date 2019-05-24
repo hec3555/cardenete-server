@@ -2,6 +2,11 @@ package org.cardenete.exceptions;
 
 public class BeanNotFoundException extends RuntimeException {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public BeanNotFoundException() {
 	}
 

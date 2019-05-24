@@ -12,7 +12,8 @@ import org.cardenete.service.LoginService;
 import org.cardenete.validations.CheckPermission;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,33 +24,38 @@ public class LoginRestController {
 	@Autowired
 	private LoginService loginService;
 
-	private ResponseBean responseBean;
-
 	// Para cada ruta haremos un check de lo que sea necesario, permitiendo o
 	// denegando acceso
 	@Autowired
 	private CheckPermission check;
 
-	@GetMapping("/login/{user}/{pass}")
+	@PostMapping("/login")
 	public ResponseBean login(HttpServletResponse response, HttpServletRequest request, HttpSession session,
-			@PathVariable String user, @PathVariable String pass) {
+			@RequestBody UsuarioBean oUsuario) {
+		
+//		Las lineas comentadas son para q no hagas login si ya estás logeado pero habría que meter la sesión del cliente en el local storage
+//		del navegador para que al refrescar no te lleve al login otra vez
+//		if (!check.checkIsLogged()) {
 		session.invalidate();
 		try {
-			UsuarioBean oUsuarioBean = loginService.login(user, pass);
+			UsuarioBean oUsuarioBean = loginService.login(oUsuario.getLogin(), oUsuario.getPass());
 			if (oUsuarioBean != null) {
 				HttpSession newSesion = request.getSession();
 				newSesion.setAttribute("usuario", oUsuarioBean);
 				response.setStatus(200);
-				return responseBean = new ResponseBean(200, "Login correcto");
+				return new ResponseBean(200, "Login correcto");
 			} else {
 				response.setStatus(401);
-				return responseBean = new ResponseBean(401, "Usuario o contraseña incorrectos (usuario no encontrado)");
+				return new ResponseBean(401, "Usuario o contraseña incorrectos");
 			}
 			
 		} catch (NotAuthException ex) {
 			response.setStatus(401);
-			return responseBean = new ResponseBean(401, "Error in login rest");
+			return new ResponseBean(401, "Error in login rest");
 		}
+//		}else {
+//			throw new NotLoggedException("Ya has iniciado sesión. Cierra sesión para hacer un login");
+//		}
 		
 		
 

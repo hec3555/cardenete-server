@@ -9,6 +9,8 @@ import org.cardenete.entity.ResponseBean;
 import org.cardenete.entity.UsuarioBean;
 import org.cardenete.enums.RolesEnum;
 import org.cardenete.exceptions.BeanNotFoundException;
+import org.cardenete.exceptions.EmptyListException;
+import org.cardenete.exceptions.NotAuthException;
 import org.cardenete.service.generic.GenericServiceInterface;
 import org.cardenete.validations.CheckPermission;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,70 +26,95 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/cardenete")
 public class UsuarioRestController {
-	
+
 	@Autowired
 	private GenericServiceInterface genericService;
-	
-	
-	// Para cada ruta haremos un check de lo que sea necesario, permitiendo o denegando acceso
+
+	// Para cada ruta haremos un check de lo que sea necesario, permitiendo o
+	// denegando acceso
 	@Autowired
 	private CheckPermission check;
-	
+
 	@Autowired
 	HttpServletRequest servletRequest;
 
 	@GetMapping("/usuarios/{idUsuario}")
 	public UsuarioBean getUsuario(@PathVariable int idUsuario) {
-		
-		if (genericService.get(UsuarioBean.class, idUsuario) == null) {
-			throw new BeanNotFoundException("Usuario con el id: " + idUsuario + " no encontrado.");
+
+		if (check.checkRolePermissions(RolesEnum.ADMIN.roleId) || check.checkSameUserSession(idUsuario)) {
+			if (genericService.get(UsuarioBean.class, idUsuario) == null) {
+				throw new BeanNotFoundException("Usuario con el id: " + idUsuario + " no encontrado.");
+			}
+			return genericService.get(UsuarioBean.class, idUsuario);
+		} else {
+			throw new NotAuthException("No tienes suficientes permisos.");
 		}
-		return genericService.get(UsuarioBean.class, idUsuario);
 	}
 
 	@GetMapping("/usuarios")
 	public List<UsuarioBean> getAllUsuarios() {
-		return (List<UsuarioBean>) genericService.getAll(UsuarioBean.class);
+		if (check.checkRolePermissions(RolesEnum.ADMIN.roleId)) {
+			List<UsuarioBean> listaUsuarios = (List<UsuarioBean>) genericService.getAll(UsuarioBean.class);
+			if(listaUsuarios.size() < 1) {
+				throw new EmptyListException("Sin resultados");
+			}else {
+				return listaUsuarios;
+			}
+		} else {
+			throw new NotAuthException("No tienes suficientes permisos.");
+		}
 	}
 
 	@PostMapping("/usuarios")
 	public ResponseBean addUsuario(@RequestBody UsuarioBean oUsuario) {
-		Date fechaAlta = new Date();
-		oUsuario.setFecha_alta(fechaAlta);
-		
-		return new ResponseBean(200, String.valueOf(genericService.save(oUsuario)));
+		if (check.checkRolePermissions(RolesEnum.ADMIN.roleId)) {
+			Date fechaAlta = new Date();
+			oUsuario.setFecha_alta(fechaAlta);
+
+			return new ResponseBean(200, String.valueOf(genericService.save(oUsuario)));
+		} else {
+			throw new NotAuthException("No tienes suficientes permisos.");
+		}
 	}
 
 	@PutMapping("/usuarios")
 	public ResponseBean updateUsuario(@RequestBody UsuarioBean oUsuario) {
-		
-		// throw exception if null
-		if (genericService.get(UsuarioBean.class, oUsuario.getId()) == null) {
-			throw new BeanNotFoundException("Usuario con el id: " + oUsuario.getId() + " no encontrado.");
-		}
-		
-		// si el pass viene nulo o vacio, le ponemos la que ya tenía antes
-		if (oUsuario.getPass() == null || oUsuario.getPass() == "") {
-			UsuarioBean usuarioAux = genericService.get(UsuarioBean.class, oUsuario.getId());
-			oUsuario.setPass(usuarioAux.getPass());
-		}
 
-		return new ResponseBean(200, genericService.saveOrUpdate(oUsuario));
+		if (check.checkRolePermissions(RolesEnum.ADMIN.roleId)) {
+			// throw exception if null
+			if (genericService.get(UsuarioBean.class, oUsuario.getId()) == null) {
+				throw new BeanNotFoundException("Usuario con el id: " + oUsuario.getId() + " no encontrado.");
+			}
+
+			// si el pass viene nulo o vacio, le ponemos la que ya tenía antes
+			if (oUsuario.getPass() == null || oUsuario.getPass() == "") {
+				UsuarioBean usuarioAux = genericService.get(UsuarioBean.class, oUsuario.getId());
+				oUsuario.setPass(usuarioAux.getPass());
+			}
+
+			return new ResponseBean(200, genericService.saveOrUpdate(oUsuario));
+		} else {
+			throw new NotAuthException("No tienes suficientes permisos.");
+		}
 	}
 
 	@DeleteMapping("/usuarios/{idUsuario}")
 	public ResponseBean deleteUsuario(@PathVariable int idUsuario) {
 
-		UsuarioBean oUsuario = genericService.get(UsuarioBean.class, idUsuario);
+		if (check.checkRolePermissions(RolesEnum.ADMIN.roleId)) {
+			UsuarioBean oUsuario = genericService.get(UsuarioBean.class, idUsuario);
 
-		// throw exception if null
-		if (oUsuario == null) {
-			throw new BeanNotFoundException("Usuario con el id: " + idUsuario + " no encontrado.");
+			// throw exception if null
+			if (oUsuario == null) {
+				throw new BeanNotFoundException("Usuario con el id: " + idUsuario + " no encontrado.");
+			}
+
+			genericService.delete(oUsuario);
+
+			return new ResponseBean(200, "Deleted user id - " + idUsuario);
+		} else {
+			throw new NotAuthException("No tienes suficientes permisos.");
 		}
-
-		genericService.delete(oUsuario);
-
-		return new ResponseBean(200, "Deleted user id - " + idUsuario);
 	}
 
 }

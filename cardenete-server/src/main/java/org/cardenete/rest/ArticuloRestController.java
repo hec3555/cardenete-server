@@ -7,9 +7,13 @@ import org.cardenete.entity.ArticuloBean;
 import org.cardenete.entity.ResponseBean;
 import org.cardenete.entity.SeccionBean;
 import org.cardenete.entity.UsuarioBean;
+import org.cardenete.enums.RolesEnum;
 import org.cardenete.exceptions.BeanNotFoundException;
+import org.cardenete.exceptions.EmptyListException;
+import org.cardenete.exceptions.NotAuthException;
 import org.cardenete.service.ArticuloService;
 import org.cardenete.service.generic.GenericServiceInterface;
+import org.cardenete.validations.CheckPermission;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +33,8 @@ public class ArticuloRestController {
 	@Autowired
 	private ArticuloService articuloService;
 
-	private ResponseBean responseBean;
+	@Autowired
+	private CheckPermission check;
 
 	@GetMapping("/articulos/{idArticulo}")
 	public ArticuloBean getArticulo(@PathVariable int idArticulo) {
@@ -42,7 +47,13 @@ public class ArticuloRestController {
 
 	@GetMapping("/articulos")
 	public List<ArticuloBean> getAllArticulos() {
-		return (List<ArticuloBean>) genericService.getAll(ArticuloBean.class);
+		
+		List<ArticuloBean> listaArticulos = (List<ArticuloBean>) genericService.getAll(ArticuloBean.class);
+		if(listaArticulos.size() < 1) {
+			throw new EmptyListException("Sin resultados");
+		}else {
+			return listaArticulos;
+		}
 	}
 
 	@GetMapping("/articulos/seccion/{idSeccion}")
@@ -51,15 +62,26 @@ public class ArticuloRestController {
 			throw new BeanNotFoundException("Sección con el id: " + idSeccion + " no encontrada.");
 		}
 
-		return (List<ArticuloBean>) articuloService.getAllBySeccion(idSeccion);
+		List<ArticuloBean> listaArticulos = (List<ArticuloBean>) articuloService.getAllBySeccion(idSeccion);
+		if(listaArticulos.size() < 1) {
+			throw new EmptyListException("Sin resultados");
+		}else {
+			return listaArticulos;
+		}
 	}
 
 	@GetMapping("/articulos/usuario/{idUsuario}")
 	public List<ArticuloBean> getArticulosByUsuario(@PathVariable int idUsuario) {
-//		if (genericService.get(UsuarioBean.class, idUsuario) == null) {
-//			throw new BeanNotFoundException("Usuario con el id: " + idUsuario + " no encontrado.");
-//		}
-		return (List<ArticuloBean>) articuloService.getAllByUsuario(idUsuario);
+		if (genericService.get(UsuarioBean.class, idUsuario) == null) {
+			throw new BeanNotFoundException("Usuario con el id: " + idUsuario + " no encontrado.");
+		}
+		
+		List<ArticuloBean> listaArticulos = (List<ArticuloBean>) articuloService.getAllByUsuario(idUsuario);
+		if(listaArticulos.size() < 1) {
+			throw new EmptyListException("Sin resultados");
+		}else {
+			return listaArticulos;
+		}
 
 	}
 
@@ -69,51 +91,69 @@ public class ArticuloRestController {
 		if (genericService.get(SeccionBean.class, idSeccion) == null) {
 			throw new BeanNotFoundException("Sección con el id: " + idSeccion + " no encontrada.");
 		}
-		
+
 		if (genericService.get(UsuarioBean.class, idUsuario) == null) {
 			throw new BeanNotFoundException("Usuario con el id: " + idUsuario + " no encontrado.");
 		}
 
-		return (List<ArticuloBean>) articuloService.getAllBySeccionAndUsuario(idSeccion, idUsuario);
+		
+		List<ArticuloBean> listaArticulos = (List<ArticuloBean>) articuloService.getAllBySeccionAndUsuario(idSeccion, idUsuario);
+		if(listaArticulos.size() < 1) {
+			throw new EmptyListException("Sin resultados");
+		}else {
+			return listaArticulos;
+		}
 	}
 
 	@PostMapping("/articulos")
 	public ResponseBean addArticulo(@RequestBody ArticuloBean oArticulo) {
-		Date fecha = new Date();
-		oArticulo.setFecha(fecha);
+		if (check.checkRolePermissions(RolesEnum.ADMIN.roleId)) {
+			Date fecha = new Date();
+			oArticulo.setFecha(fecha);
 
-		return new ResponseBean(200, String.valueOf(genericService.save(oArticulo)));
+			return new ResponseBean(200, String.valueOf(genericService.save(oArticulo)));
+		} else {
+			throw new NotAuthException("No tienes suficientes permisos.");
+		}
 	}
 
 	@PutMapping("/articulos")
-	public ResponseBean updateBean(@RequestBody ArticuloBean oArticulo) {
+	public ResponseBean updateArticulo(@RequestBody ArticuloBean oArticulo) {
+		// Si un admin pone que el articulo es de un usuario de tipo usuario, este podrá editar el articulo porque es suyo,
+		// pero para ello un admin debe especificar que el articulo le pertenece, un usuario no puede crear articulos
+		if (check.checkRolePermissions(RolesEnum.ADMIN.roleId) || check.checkSameUserSession(oArticulo.getId_usuario().getId())) {
+			// throw exception if null
+			if (genericService.get(ArticuloBean.class, oArticulo.getId()) == null) {
+				throw new BeanNotFoundException("Articulo con el id: " + oArticulo.getId() + " no encontrado.");
+			}
 
-		// throw exception if null
-		if (genericService.get(ArticuloBean.class, oArticulo.getId()) == null) {
-			throw new BeanNotFoundException("Articulo con el id: " + oArticulo.getId() + " no encontrado.");
+			if (oArticulo.getFecha() == null) {
+				ArticuloBean articuloAux = genericService.get(ArticuloBean.class, oArticulo.getId());
+				oArticulo.setFecha(articuloAux.getFecha());
+			}
+
+			return new ResponseBean(200, genericService.saveOrUpdate(oArticulo));
+		} else {
+			throw new NotAuthException("No tienes suficientes permisos.");
 		}
-
-		if (oArticulo.getFecha() == null) {
-			ArticuloBean articuloAux = genericService.get(ArticuloBean.class, oArticulo.getId());
-			oArticulo.setFecha(articuloAux.getFecha());
-		}
-
-		return new ResponseBean(200, genericService.saveOrUpdate(oArticulo));
 	}
 
 	@DeleteMapping("/articulos/{idArticulo}")
-	public ResponseBean deleteCustomer(@PathVariable int idArticulo) {
+	public ResponseBean deleteArticulo(@PathVariable int idArticulo) {
+		if (check.checkRolePermissions(RolesEnum.ADMIN.roleId)) {
+			ArticuloBean oArticulo = genericService.get(ArticuloBean.class, idArticulo);
 
-		ArticuloBean oArticulo = genericService.get(ArticuloBean.class, idArticulo);
+			// throw exception if null
+			if (oArticulo == null) {
+				throw new BeanNotFoundException("Articulo con el id: " + idArticulo + " no encontrado.");
+			}
 
-		// throw exception if null
-		if (oArticulo == null) {
-			throw new BeanNotFoundException("Articulo con el id: " + idArticulo + " no encontrado.");
+			genericService.delete(oArticulo);
+
+			return new ResponseBean(200, "Articulo con id - " + idArticulo + " borrada.");
+		} else {
+			throw new NotAuthException("No tienes suficientes permisos.");
 		}
-
-		genericService.delete(oArticulo);
-
-		return new ResponseBean(200, "Articulo con id - " + idArticulo + " borrada.");
 	}
 
 }

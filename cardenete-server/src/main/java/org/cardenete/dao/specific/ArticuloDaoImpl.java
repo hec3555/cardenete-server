@@ -18,7 +18,7 @@ public class ArticuloDaoImpl implements ArticuloDao {
 	public List<ArticuloBean> getAllBySeccion(int idSeccion) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		Query<ArticuloBean> theQuery = currentSession
-				.createQuery("from ArticuloBean WHERE id_seccion.id = :idSeccion", ArticuloBean.class);
+				.createQuery("from ArticuloBean WHERE id_seccion.id = :idSeccion ORDER BY fecha DESC", ArticuloBean.class);
 		theQuery.setParameter("idSeccion", idSeccion);
 		List<ArticuloBean> articulosBySeccion = theQuery.getResultList();
 		if(articulosBySeccion.isEmpty()) {
@@ -30,7 +30,7 @@ public class ArticuloDaoImpl implements ArticuloDao {
 
 	public List<ArticuloBean> getAllByUsuario(int idUsuario) {
 		Session currentSession = sessionFactory.getCurrentSession();
-		Query<ArticuloBean> theQuery = currentSession.createQuery("from ArticuloBean WHERE id_usuario.id = :idUsuario", ArticuloBean.class);
+		Query<ArticuloBean> theQuery = currentSession.createQuery("from ArticuloBean WHERE id_usuario.id = :idUsuario ORDER BY fecha DESC", ArticuloBean.class);
 		theQuery.setParameter("idUsuario", idUsuario);
 		List<ArticuloBean> articulos = theQuery.getResultList();
 		return articulos;
@@ -39,7 +39,7 @@ public class ArticuloDaoImpl implements ArticuloDao {
 	public List<ArticuloBean> getAllBySeccionAndUsuario(int idSeccion, int idUsuario) {
 		Session currentSession = sessionFactory.getCurrentSession();
 		Query<ArticuloBean> theQuery = currentSession
-				.createQuery("from ArticuloBean WHERE id_seccion.id = :idSeccion AND id_usuario.id = :idUsuario", ArticuloBean.class);
+				.createQuery("from ArticuloBean WHERE id_seccion.id = :idSeccion AND id_usuario.id = :idUsuario ORDER BY fecha DESC", ArticuloBean.class);
 		theQuery.setParameter("idSeccion", idSeccion);
 		theQuery.setParameter("idUsuario", idUsuario);
 		List<ArticuloBean> articulosByUsuarioAndSeccion= theQuery.getResultList();

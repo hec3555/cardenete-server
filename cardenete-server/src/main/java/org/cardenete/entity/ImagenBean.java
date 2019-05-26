@@ -12,6 +12,8 @@ import javax.persistence.SecondaryTable;
 import javax.persistence.SecondaryTables;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import com.sun.istack.NotNull;
 
 @Entity
@@ -20,6 +22,7 @@ import com.sun.istack.NotNull;
 	@SecondaryTable(name = "usuario", pkJoinColumns = { @PrimaryKeyJoinColumn(name = "id") }),
 	@SecondaryTable(name = "categoria", pkJoinColumns = { @PrimaryKeyJoinColumn(name = "id") }),
 })
+@DynamicUpdate(value=true)
 public class ImagenBean {
 
 	@Id

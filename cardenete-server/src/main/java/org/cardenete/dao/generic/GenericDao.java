@@ -12,30 +12,30 @@ public class GenericDao implements GenericDaoInterface {
 	private SessionFactory sessionFactory;
 
 	@Override
-	public <T> T getAll(Class<T> type) {
+	public <T> T getAll(final Class<T> type) {
 		Session session = sessionFactory.getCurrentSession();
 		return (T) session.createQuery("FROM  " + type.getSimpleName()).getResultList();
 	}
 
 	@Override
-	public <T> T get(Class<T> type, int id) {
+	public <T> T get(final Class<T> type, final int id) {
 		return sessionFactory.getCurrentSession().get(type, id);
 	}
 
 	@Override
-	public <T> String saveOrUpdate(T o) {
+	public <T> String saveOrUpdate(final T o) {
 		sessionFactory.getCurrentSession().saveOrUpdate(o);
 		return "Updated";
 	}
 
 	@Override
-	public <T> String delete(T o) {
+	public <T> String delete(final T o) {
 		sessionFactory.getCurrentSession().delete(o);
 		return "Deleted";
 	}
 
 	@Override
-	public <T> int save(T o) {
+	public <T> int save(final T o) {
 		return  (Integer) sessionFactory.getCurrentSession().save(o);
 	}
 

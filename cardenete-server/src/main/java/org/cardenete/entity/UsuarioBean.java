@@ -2,6 +2,7 @@ package org.cardenete.entity;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,6 +15,8 @@ import javax.persistence.SecondaryTable;
 import javax.persistence.SecondaryTables;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -24,6 +27,7 @@ import com.sun.istack.NotNull;
 @SecondaryTables({
 	@SecondaryTable(name = "tipo_usuario", pkJoinColumns = { @PrimaryKeyJoinColumn(name = "id") })
 })
+@DynamicUpdate(value=true)
 public class UsuarioBean {
 
 	@Id
@@ -74,7 +78,7 @@ public class UsuarioBean {
 	private boolean confirmado;
 	
 	
-	@ManyToOne
+	@ManyToOne()
 	@JoinColumn(name = "id_tipo_usuario")
 	@NotNull
 	private TipoUsuarioBean id_tipo_usuario;

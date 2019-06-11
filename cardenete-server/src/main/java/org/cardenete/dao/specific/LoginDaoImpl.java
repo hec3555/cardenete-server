@@ -29,5 +29,48 @@ public class LoginDaoImpl implements LoginDao {
 		UsuarioBean usuario = theQuery.getSingleResult(); // si llega aquí, es que si que lo ha encontrado y devolvemos el usuario que va a loggearse
 		return usuario;
 	}
+	
+	@Override
+	public UsuarioBean getUserByToken(String login, String token) {
+		Session currentSession = sessionFactory.getCurrentSession();
+		Query<UsuarioBean> theQuery = currentSession
+				.createQuery("from UsuarioBean WHERE login = :login and token = :token", UsuarioBean.class);
+		theQuery.setParameter("login", login);
+		theQuery.setParameter("token", token);
+		List<UsuarioBean> usuarioExists = theQuery.getResultList(); // creo una lista porque si hago el single result y no encuentra ningun usuario salta excepcion
+		if(usuarioExists.isEmpty()) { // si la lista esta vacia devuelvo null y así en el rest trataremos el error de que no se ha loggeado con el mensaje que quiera
+			return null;
+		}
+		UsuarioBean usuario = theQuery.getSingleResult(); // si llega aquí, es que si que lo ha encontrado y devolvemos el usuario que va a loggearse
+		return usuario;
+	}
+
+	@Override
+	public boolean checkUsernameIsAvailable(String username) {
+		Session currentSession = sessionFactory.getCurrentSession();
+		Query<UsuarioBean> theQuery = currentSession
+				.createQuery("from UsuarioBean WHERE login = :login", UsuarioBean.class);
+		theQuery.setParameter("login", username);
+		List<UsuarioBean> usuarioExists = theQuery.getResultList();
+		if(usuarioExists.isEmpty()) {
+			return true;
+		}else {
+			return false;
+		}	
+	}
+
+	@Override
+	public boolean checkEmailIsAvailable(String email) {
+		Session currentSession = sessionFactory.getCurrentSession();
+		Query<UsuarioBean> theQuery = currentSession
+				.createQuery("from UsuarioBean WHERE email = :email", UsuarioBean.class);
+		theQuery.setParameter("email", email);
+		List<UsuarioBean> usuarioExists = theQuery.getResultList();
+		if(usuarioExists.isEmpty()) {
+			return true;
+		}else {
+			return false;
+		}	
+	}
 
 }

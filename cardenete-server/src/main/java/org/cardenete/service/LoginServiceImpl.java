@@ -19,4 +19,19 @@ public class LoginServiceImpl implements LoginService {
 		return loginDao.login(user, pass);
 	}
 
+	@Override
+	public boolean checkUsernameIsAvailable(String username) {
+		return loginDao.checkUsernameIsAvailable(username);
+	}
+
+	@Override
+	public boolean checkEmailIsAvailable(String email) {
+		return loginDao.checkEmailIsAvailable(email);
+	}
+
+	@Override
+	public UsuarioBean getUserByToken(String login, String token) {
+		return loginDao.getUserByToken(login, token);
+	}
+
 }

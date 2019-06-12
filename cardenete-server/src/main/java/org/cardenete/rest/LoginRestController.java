@@ -12,6 +12,7 @@ import org.cardenete.email.EmailSender;
 import org.cardenete.entity.ResponseBean;
 import org.cardenete.entity.UsuarioBean;
 import org.cardenete.exceptions.BeanNotFoundException;
+import org.cardenete.exceptions.EmailFailedException;
 import org.cardenete.exceptions.NotAuthException;
 import org.cardenete.exceptions.NotLoggedException;
 import org.cardenete.service.LoginService;
@@ -58,7 +59,7 @@ public class LoginRestController {
 				if(!oUsuarioBean.isConfirmado()) {
 					// ENVIAR EMAIL DE VERIFICACIÓN
 					try {
-						emailSender.sendVerificationEmail(oUsuario.getEmail());
+						emailSender.sendVerificationEmail(oUsuario);
 					} catch (MessagingException ex) {
 						response.setStatus(500);
 						return new ResponseBean(500, "Error al enviar mail de verificacion");
@@ -105,7 +106,7 @@ public class LoginRestController {
 	
 	@PostMapping("/registrar")
 	public ResponseBean registrar(@RequestBody UsuarioBean oUsuario) {
-		
+			String respuesta = "";
 			// generar token 
 			UUID uuid = UUID.randomUUID();
 			String token = uuid.toString();
@@ -114,14 +115,21 @@ public class LoginRestController {
 			// usuario con confirmado = false
 			oUsuario.setConfirmado(false);
 			
-			// enviar mail de verificacion
-			
-			// si un usuario inicia sesión y está deshabilitado, informar y reenviar mail de verificacion
-		
+			// fecha de hoy
 			Date fechaAlta = new Date();
 			oUsuario.setFecha_alta(fechaAlta);
+			
+			// crear usuario
+			respuesta = String.valueOf(genericService.save(oUsuario));
+			
+			// enviar mail de verificacion
+			try {
+				emailSender.sendVerificationEmail(oUsuario);
+			} catch (MessagingException ex) {
+				throw new EmailFailedException("Error al enviar mail de verificacion");
+			}
 
-			return new ResponseBean(200, String.valueOf(genericService.save(oUsuario)));
+			return new ResponseBean(200, respuesta);
 	}
 	
 	@GetMapping("/check-username-availability/{username}")

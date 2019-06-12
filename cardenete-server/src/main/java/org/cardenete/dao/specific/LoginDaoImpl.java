@@ -73,4 +73,19 @@ public class LoginDaoImpl implements LoginDao {
 		}	
 	}
 
+	@Override
+	public String getUserToken(String user, String pass) {
+		Session currentSession = sessionFactory.getCurrentSession();
+		Query<String> theQuery = currentSession
+				.createQuery("SELECT token from UsuarioBean WHERE login = :login and pass = :pass", String.class);
+		theQuery.setParameter("login", user);
+		theQuery.setParameter("pass", pass);
+		List<String> result = theQuery.getResultList();
+		if(result.isEmpty()) {
+			return null;
+		}
+		String token = theQuery.getSingleResult();
+		return token;
+	}
+
 }

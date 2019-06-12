@@ -30,17 +30,17 @@ public class ExceptionsHandler {
 		// return ResponseEntity
 		return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
 	}
-	
-	// Add an exception handler for EmptyListException
-		@ExceptionHandler
-		public ResponseEntity<ResponseBean> handleException(EmptyListException exc) {
 
-			// create ErrorResponse
-			ResponseBean error = new ResponseBean(HttpStatus.NO_CONTENT.value(), exc.getMessage(),
-					System.currentTimeMillis());
-			// return ResponseEntity
-			return new ResponseEntity<>(error, HttpStatus.NO_CONTENT);
-		}
+	// Add an exception handler for EmptyListException
+	@ExceptionHandler
+	public ResponseEntity<ResponseBean> handleException(EmptyListException exc) {
+
+		// create ErrorResponse
+		ResponseBean error = new ResponseBean(HttpStatus.NO_CONTENT.value(), exc.getMessage(),
+				System.currentTimeMillis());
+		// return ResponseEntity
+		return new ResponseEntity<>(error, HttpStatus.NO_CONTENT);
+	}
 
 	// Add an exception handler for NotLoggedException
 	@ExceptionHandler
@@ -51,6 +51,17 @@ public class ExceptionsHandler {
 				System.currentTimeMillis());
 		// return ResponseEntity
 		return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
+	}
+
+	// Add an exception handler for EmailFailedException
+	@ExceptionHandler
+	public ResponseEntity<ResponseBean> handleException(EmailFailedException exc) {
+
+		// create ErrorResponse
+		ResponseBean error = new ResponseBean(HttpStatus.INTERNAL_SERVER_ERROR.value(), exc.getMessage(),
+				System.currentTimeMillis());
+		// return ResponseEntity
+		return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	// Add another exception handler ... to catch any exception (catch all)

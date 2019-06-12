@@ -34,4 +34,10 @@ public class LoginServiceImpl implements LoginService {
 		return loginDao.getUserByToken(login, token);
 	}
 
+	@Transactional
+	@Override
+	public String getUserToken(String user, String pass) {
+		return loginDao.getUserToken(user, pass);
+	}
+
 }

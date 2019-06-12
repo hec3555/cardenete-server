@@ -7,6 +7,8 @@ public interface LoginDao {
 	
 	public UsuarioBean getUserByToken(String login, String token);
 	
+	public String getUserToken(String user, String pass);
+	
 	public boolean checkUsernameIsAvailable(String username);
 	
 	public boolean checkEmailIsAvailable(String email);

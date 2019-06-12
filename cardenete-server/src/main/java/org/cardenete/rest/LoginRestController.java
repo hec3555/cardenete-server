@@ -57,9 +57,10 @@ public class LoginRestController {
 			UsuarioBean oUsuarioBean = loginService.login(oUsuario.getLogin(), oUsuario.getPass());
 			if (oUsuarioBean != null) {
 				if(!oUsuarioBean.isConfirmado()) {
+										
 					// ENVIAR EMAIL DE VERIFICACIÓN
 					try {
-						emailSender.sendVerificationEmail(oUsuario);
+						emailSender.sendVerificationEmail(oUsuarioBean);
 					} catch (MessagingException ex) {
 						response.setStatus(500);
 						return new ResponseBean(500, "Error al enviar mail de verificacion");
@@ -121,7 +122,7 @@ public class LoginRestController {
 			
 			// crear usuario
 			respuesta = String.valueOf(genericService.save(oUsuario));
-			
+									
 			// enviar mail de verificacion
 			try {
 				emailSender.sendVerificationEmail(oUsuario);

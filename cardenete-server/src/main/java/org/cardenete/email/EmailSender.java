@@ -22,6 +22,7 @@ public class EmailSender {
 	public void sendVerificationEmail(UsuarioBean oUsuario) throws MessagingException {
 		
 		String token = loginService.getUserToken(oUsuario.getLogin(), oUsuario.getPass());
+		String email = oUsuario.getEmail();
 		
 		try {
 			MimeMessage mimeMessage = emailSender.createMimeMessage();
@@ -33,13 +34,13 @@ public class EmailSender {
 					+ "<p>&iexcl;Gracias por utilizar la aplicaci&oacute;n web de Cardenete!</p>"
 					+ "<p>Para poder continuar, debes confirmar tu cuenta haciendo clic en el siguiente enlace:</p>"
 					+ "<p>"
-						+ "<a href=\"http://localhost:4200/webapp/confirmar-cuenta/"+oUsuario.getLogin()+"/"+token+"\">Confirma tu cuenta</a>"
+						+ "<a href=\"http://localhost:4200/confirmar-cuenta/"+oUsuario.getLogin()+"/"+token+"\">Confirma tu cuenta</a>"
 					+ "</p>";
 			mimeMessage.setContent(cuerpo, "text/html");
-			helper.setTo(oUsuario.getEmail());
+			helper.setTo(email);
 			
 			// para probar lo mando a mi correo
-			// helper.setTo("hec3555@gmail.com");
+			//helper.setTo("hec3555@gmail.com");
 			helper.setSubject("CARDENETE: Confirme su dirección de correo electrónico");
 			emailSender.send(mimeMessage);
 		} catch (MessagingException ex) {
